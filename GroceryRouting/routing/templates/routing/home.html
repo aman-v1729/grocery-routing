@@ -1,0 +1,19 @@
+{% extends "routing/base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<h5>
+The Government of India has imposed a curfew to control the spread of COVID-19. This indicates that groceries need to be home-delivered, to contain the spread of the virus.
+<br><br>
+We assume that the government has a local warehouse in every area, and a set of homes, each with their individual demands. Each delivery agent has a motorbike and it can hold up to a certain capacity of groceries.
+<br><br>
+The user starts by entering the coordinates of the warehouse, and the number of  homes and delivery agents. Next, the coordinates and demands of each home is recorded, followed by the capacity of each agent’s motorbike.
+<br><br>
+This application helps to identify the optimum solution for distribution of the homes among agents and the routes to be taken, to obtain maximum efficiency.
+<br><br>
+Once registration is completed, click on the <a href="{% url 'routing-solve' %}"><font color = "green">New Query</font></a> button on the navigation bar to get started. See a <a href = "{% url 'routing-result' 0 %}">sample</a>.
+</h5>
+{% endblock %}

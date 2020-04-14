@@ -1,0 +1,14 @@
+{% extends "routing/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+Logout
+{% endblock %}
+
+{% block content %}
+<h2>Logged Out!</h2>
+<br>
+<form action="{% url 'login' %}">
+  <button class ="btn btn-success"><i class="fas fa-sign-in-alt"></i> Login Again? </button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "routing/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+Solve
+{% endblock %}
+
+{% block content %}
+
+<form method = "POST">
+	{% csrf_token %}
+	{{ form|crispy }}
+	<br>
+	<button type = "SUBMIT" class = "btn btn-success">SUBMIT</button>
+</form>
+{% endblock %}

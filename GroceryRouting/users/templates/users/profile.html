@@ -1,0 +1,88 @@
+{% extends "routing/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+<!-- <h2>Hi {{ user.username }}</h2> -->
+<div class="row"><div class="col-sm-12"><div class="text-center"><h2><font color="#fb8b06">Activity</font></h2></div></div></div>
+<br>
+<div class="row"><div class="col-sm-12"><div class="text-center"><h3>Today</h3></div></div></div>
+<table class="table">
+{% if todaylen != 0 %}
+	<thead>
+		<tr>
+			<th><div class="text-center">Delivery Date</div></th>
+			<th><div class="text-center">Order Time</div></th>
+			<th><div class="text-center">Info</div></th>
+		</tr>
+		{% for session in today %}
+			<tr>
+				<td><div class="text-center">{{session.delivery_date}}</div></td>
+				<td><div class="text-center">{{session.sesstime}}</div></td>
+				<td><div class="text-center">
+					<form action="{% url 'routing-result' session.session %}">
+					  <button class ="btn btn-info">View Details</button>
+					</form>
+				</div></td>
+			</tr>
+		{% endfor %}
+	</thead>
+{% else %}
+	<thead><tr><th><div class="text-center"><font color="#fb8b06">No deliveries for today</font></div></th></tr></thead>
+{% endif %}
+</table>
+
+<div class="row"><div class="col-sm-12"><div class="text-center"><h3>Future Deliveries</h3></div></div></div>
+<table class="table">
+{% if futurelen != 0 %}
+	<thead>
+		<tr>
+			<th><div class="text-center">Delivery Date</div></th>
+			<th><div class="text-center">Order Time</div></th>
+			<th><div class="text-center">Info</div></th>
+		</tr>
+		{% for session in future %}
+			<tr>
+				<td><div class="text-center">{{session.delivery_date}}</div></td>
+				<td><div class="text-center">{{session.sesstime}}</div></td>
+				<td><div class="text-center">
+					<form action="{% url 'routing-result' session.session %}">
+					  <button class ="btn btn-info">View Details</button>
+					</form>
+				</div></td>
+			</tr>
+		{% endfor %}
+	</thead>
+{% else %}
+	<thead><tr><th><div class="text-center"><font color="#fb8b06">Nothing to show here</font></div></th></tr></thead>
+{% endif %}
+</table>
+
+<div class="row"><div class="col-sm-12"><div class="text-center"><h3>Past Deliveries</h3></div></div></div>
+<table class="table">
+{% if pastlen != 0 %}
+	<thead>
+		<tr>
+			<th><div class="text-center">Delivery Date</div></th>
+			<th><div class="text-center">Order Time</div></th>
+			<th><div class="text-center">Info</div></th>
+		</tr>
+		{% for session in past %}
+			<tr>
+				<td><div class="text-center">{{session.delivery_date}}</div></td>
+				<td><div class="text-center">{{session.sesstime}}</div></td>
+				<td><div class="text-center">
+					<form action="{% url 'routing-result' session.session %}">
+					  <button class ="btn btn-info">View Details</button>
+					</form>
+				</div></td>
+			</tr>
+		{% endfor %}
+	</thead>
+{% else %}
+	<thead><tr><th><div class="text-center"><font color="#fb8b06">Nothing to show here</font></div></th></tr></thead>
+{% endif %}
+</table>
+{% endblock %}

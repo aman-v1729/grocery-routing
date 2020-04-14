@@ -1,0 +1,92 @@
+{% extends "routing/base.html" %}
+
+{% block title %}
+Result
+{% endblock %}
+
+{% block content %}
+{% load mathfilters %}
+<div class="row"><h5>Delivery Date: {{date}}</h5></div><br>
+<div class="row"><h5>Warehouse: ({{warehouselat}}&#176 N, {{warehouselng}}&#176 W)</h5></div><br>
+{% if issolution == 1 %}
+{% for agent in result %}
+	{% if forloop.counter|mod:2 == 1 %}
+		<div class="row">
+	{% endif %}
+			<div class="col-sm-6">
+			<div class="row"><h3><font color="#fb8b06">Agent {{forloop.counter}}</font></h3></div>
+			{% if agent.size != 0 %}
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Total Roundtrip Distance: {{agent.distance}} Km</h5></div></div>
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Total Load: {{agent.load}}</h5></div></div>
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Capacity: {{agent.capacity}}</h5></div></div>
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Number of Homes: {{agent.size}}</h5></div></div>
+				<form action="{% url 'routing-detail' session forloop.counter %}" method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="distance" value= {{agent.distance}} id= "distance" />
+					<input type="hidden" name="load" value= {{agent.load}} id= "load" />
+					<input type="hidden" name="capacity" value= {{agent.capacity}} id= "capacity" />
+					<input type="hidden" name="size" value= {{agent.size}} id= "size" />
+					{% for node in agent.route %}
+						<input type="hidden" name={{forloop.counter}} value= {{node}} id={{forloop.counter}}  />
+					{% endfor %}
+					<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><button class ="btn btn-info">View Route Details</button></div></div>
+				</form>
+				<br><br>
+			{% else %}
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Agent {{forloop.counter}} is free</h5></div></div>
+				<br>
+			{% endif %}
+			</div>
+	{% if forloop.counter|mod:2 == 0 %}
+		</div>
+	{% endif %}
+{% endfor %}
+{% if agentsnum|mod:2 != 0 %}
+</div>
+<br>
+{% endif %}
+{% endif %}
+{% if issolution == 0 %}
+<div class="text-center"><h3>Agents</h3></div><br>
+{% for agent in capacities %}
+	{% if forloop.counter|mod:2 == 1 %}
+		<div class="row">
+	{% endif %}
+			<div class="col-sm-6">
+			<div class="row"><h3><font color="#fb8b06">Agent {{forloop.counter}}</font></h3></div>
+				<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Capacity: {{agent}}</h5></div></div>
+				<br>
+			</div>
+	{% if forloop.counter|mod:2 == 0 %}
+		</div>
+	{% endif %}
+{% endfor %}
+{% if agentsnum|mod:2 != 0 %}
+</div>
+<br>
+{% endif %}
+{% endif %}
+<div class="text-center"><h3>Homes</h3></div><br>
+{% for home in homes %}
+	{% if forloop.counter|mod:3 == 1 %}
+<div class="row">
+	{% endif %}
+	<div class="col-sm-4">
+		<div clsss="text-center"><h5><font color="blue">#{{forloop.counter}}: </font>({{home.latitude}}&#176 N, {{home.longitude}}&#176 W)<br>&emsp;Demand: {{home.demand}}</h5></div>
+	</div>
+	{% if forloop.counter|mod:3 == 0 %}
+</div>
+<br>
+	{% endif %}
+{% endfor %}
+{% if homesize|mod:3 != 0 %}
+</div>
+<br>
+{% endif %}
+{% if issolution == 0 %}
+<font color="red"><h3>No solution Exists (Recheck coordinates or agent capacities)</h3></font><br>
+<form action="{% url 'routing-home' %}">
+	<button class ="btn btn-warning"><i class="fas fa-long-arrow-alt-left"></i> Go Back</button>
+</form>
+{% endif %}
+{% endblock %}

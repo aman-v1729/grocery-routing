@@ -1,0 +1,89 @@
+{% extends "routing/base.html" %}
+
+{% block title %}
+Agent Information
+{% endblock %}
+
+{% block content %}
+<!-- <style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #myMap {
+    height: 100%;
+    position: relative;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style> -->
+<script type='text/javascript'>
+    function GetMap() {
+        var map = new Microsoft.Maps.Map('#myMap', {
+            credentials: 'AmKwhh-IbC_WJaRS5TGj-NSADzzuH1HH9WU8DI-i9sbSl8_YXx3aoE2owOY4WNgX',
+            center: new Microsoft.Maps.Location({{warehouselat}},{{warehouselng}}),
+            zoom:10
+        });
+        var center = map.getCenter();
+        var ware = new Microsoft.Maps.Pushpin(center, {
+            title: 'Warehouse',
+            text: '0',
+            color: 'red'
+        });
+        map.entities.push(ware)
+        //Create custom Pushpin
+        var locs = [];
+        locs.push(center);
+        {% for stop in route %}
+          var loc = new Microsoft.Maps.Location({{stop.lat}},{{stop.lng}});
+          locs.push(loc);
+          var pin = new Microsoft.Maps.Pushpin(loc, {
+              title: 'Home {{stop.number}}',
+              text: '{{forloop.counter}}',
+              color: 'blue'
+          });
+
+          //Add the pushpin to the map
+          map.entities.push(pin);
+
+        {% endfor %}
+        var bounds = Microsoft.Maps.LocationRect.fromLocations(locs);
+        map.setView({bounds:bounds, padding: 100});
+    }
+    </script>
+<script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap' async defer></script>
+<!-- <div class = "text-center"><h2>Delivery Agent {{number}}</h2></div> -->
+<div class="row">
+  <div class="col-sm-4"><div class="text-center"><h3><font color="#fb8b06">Total Roundtrip Distance</font></h3><br><h5>{{distance}} Km</h5></div></div>
+  <div class="col-sm-4"><div class="text-center"><h3><font color="#fb8b06">Total Load</font></h3><br><h5>{{load}}</h5></div></div>
+  <div class="col-sm-4"><div class="text-center"><h3><font color="#fb8b06">Number of Homes</font></h3><br><h5>{{size}}</h5></div></div>
+</div>
+<br><br>
+<div class = "text-center"><h2><font color="#fb8b06">Route</font></h2></div>
+<br>
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-10"><h5><font color="red"><b>Stop 0:</b></font> Warehouse ({{warehouselat}}&#176 N, {{warehouselng}}&#176 W)</h5></div>
+</div>
+<br>
+{% for stop in route %}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10"><h5><font color="blue"><b>Stop {{forloop.counter}}:</b></font> Home {{stop.number}} ({{stop.lat}}&#176 N, {{stop.lng}}&#176 W) <font color="blue">-></font> Demand: {{stop.demand}}</h5></div>
+  </div>
+  <br>
+{% endfor %}
+<!-- <div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-10"><h5>Return Back</h5></div>
+</div> -->
+<br>
+<div id="myMap" style="relative:fixed;width:1200px;height:600px;"class="container"></div>
+<br><br>
+<form action="{% url 'routing-result' session %}">
+  <button class ="btn btn-warning"><i class="fas fa-long-arrow-alt-left"></i> Go Back</button>
+</form>
+
+{% endblock %}

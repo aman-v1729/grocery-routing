@@ -1,0 +1,35 @@
+{% extends "routing/base.html" %}
+
+{% block title %}
+Result
+{% endblock %}
+
+{% block content %}
+{% for agent in result %}
+	<!-- {{home.latitude}}N, {{home.longitude}}W -->
+	<div class="row"><h3><font color="#fb8b06">Agent {{forloop.counter}}</font></h3></div>
+	{% if agent.size != 0 %}
+		<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Total Roundtrip Distance: {{agent.distance}} Km</h5></div></div>
+		<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Total Load: {{agent.load}}</h5></div></div>
+		<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Number of Homes: {{agent.size}}</h5></div></div>
+		<form action="{% url 'routing-detail' 0 forloop.counter %}" method="POST">
+			{% csrf_token %}
+			<input type="hidden" name="distance" value= {{agent.distance}} id= "distance" />
+			<input type="hidden" name="load" value= {{agent.load}} id= "load" />
+			<input type="hidden" name="size" value= {{agent.size}} id= "size" />
+			<!-- <input type="hidden" name="agentnumber" value= {{forloop.counter}} id= "agentnumber" /> -->
+			{% for node in agent.route %}
+				<input type="hidden" name={{forloop.counter}} value= {{node}} id={{forloop.counter}}  />
+			{% endfor %}
+			<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><button class ="btn btn-info">View Route Details</button></div></div>
+		</form>
+		<br><br>
+	{% else %}
+		<div class="row"><div class="col-sm-1"></div><div class="col-sm-11"><h5>Agent {{forloop.counter}} is free</h5></div></div>
+		<br>
+	{% endif %}
+	<!-- <a href="/result/{{forloop.counter}}/">Details</a> -->
+	<!-- {{home.demand}} -->
+{% endfor %}
+
+{% endblock %}

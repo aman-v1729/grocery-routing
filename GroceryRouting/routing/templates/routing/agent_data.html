@@ -1,0 +1,18 @@
+{% extends "routing/base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+Form - Delivery Agents
+{% endblock %}
+
+{% block content %}
+
+<form method = "POST">
+	{% csrf_token %}
+	{{ formset.management_form }}
+	{% for form in formset %}
+		<h4>Agent {{ forloop.counter }}:</h4>
+		{{ form|crispy }}
+	{% endfor %}
+	<button type = "SUBMIT" class = "btn btn-success">SUBMIT</button>
+</form>
+{% endblock %}
